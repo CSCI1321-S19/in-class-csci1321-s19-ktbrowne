@@ -3,11 +3,14 @@ package graphicgame
 trait Entity extends Serializable {
   def x: Double=20
   def y: Double=20
-  def width: Double=20
-  def height: Double=20
-  //def update(delay: Double): Unit={
-   // ???
- // }
+  def width: Double=1
+  def height: Double=1
+ 
+  
+  def update(delay:Double):Unit = {
+  ???
+  
+}
  // def postCheck(): Unit = {
     
 //    ??? // You can delete this if you don't use it.

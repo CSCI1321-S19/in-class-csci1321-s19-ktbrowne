@@ -10,6 +10,7 @@ import scalafx.scene.image.Image
  * your game.
  */
 class Renderer2D(gc: GraphicsContext, blockSize: Double) {
+ println("wow "+Main.level.entities)
   private var lastCenterX = 80.0 
   private var lastCenterY = 80.0
  
@@ -20,8 +21,8 @@ class Renderer2D(gc: GraphicsContext, blockSize: Double) {
   private val enemyImage = Renderer2D.loadImage("enemy.png")
   private val generatorImage = Renderer2D.loadImage("generator.png")
 private val bulletImage = Renderer2D.loadImage("bullet.png")
-val player = Main.player
-val level = player.level
+
+
 
 /**
    * These two methods are used to figure out where to draw things. They are used by the render.
@@ -38,40 +39,37 @@ val level = player.level
   /**
    * This method is called to render things to the screen.
    */
-  def render(level: Level, cx: Double, cy: Double): Unit = {
+   def render(level: Level, cx: Double, cy: Double): Unit = {
     lastCenterX = cx
-    lastCenterY = cy
+   lastCenterY = cy
 
     val drawWidth = (gc.canvas.getWidth / blockSize).toInt + 1
     val drawHeight = (gc.canvas.getWidth / blockSize).toInt + 1
 
-    // Draw walls and floors
-   for {
-    x <- cx.toInt - drawWidth / 2 - 1 to cx.toInt + drawWidth / 2 + 1
-   y <- cy.toInt - drawHeight / 2 - 1 to cy.toInt + drawHeight / 2 + 1
-  } {
-     val img = level.maze(x, y) match {
-       case Wall => wallImage
-       case Floor => floorImage
-     }
-     gc.drawImage(img, blocksToPixelsX(x), blocksToPixelsY(y), blockSize, blockSize)
+    for {
+      x <- cx.toInt - drawWidth / 2 - 1 to cx.toInt + drawWidth / 2 + 1
+      y <- cy.toInt - drawHeight / 2 - 1 to cy.toInt + drawHeight / 2 + 1
+    } {
+      val img = level.maze(x, y) match {
+        case Wall => wallImage
+        case Floor => floorImage
+      }
+      gc.drawImage(img, blocksToPixelsX(x), blocksToPixelsY(y), blockSize, blockSize)
+    }
+
+for (e <- level.entities) {
+     val img = e match {
+       case p: Player => playerImage
+        case e: Enemy => enemyImage
+      }
+      if(level.maze.wrap) {
+        for(rx <- -1 to 1; ry <- -1 to 1)
+    	    gc.drawImage(img, blocksToPixelsX(e.x-e.width/2+rx*level.maze.width), blocksToPixelsY(e.y-e.height/2+ry*level.maze.height), e.width*blockSize, e.height*blockSize)
+      } else {
+    	  gc.drawImage(img, blocksToPixelsX(e.x-e.width/2), blocksToPixelsY(e.y-e.height/2), e.width*blockSize, e.height*blockSize)
+      }
     }
   }
- // Draw entities
-    for (e <- player.level.entities) {
-    val img = e match {
-      case p: Player => playerImage
-      case e: Enemy => enemyImage
-    //   case b: Bullet => bulletImage
- //     case g: Generator => generatorImage
-    }
-      if(level.maze.wrap) {
-      for(rx <- -1 to 1; ry <- -1 to 1)
-      gc.drawImage(img, blocksToPixelsX(e.x-e.width/2+rx*level.maze.width), blocksToPixelsY(e.y-e.height/2+ry*level.maze.height), e.width*blockSize, e.height*blockSize)
-    } else {
-   	  gc.drawImage(img, blocksToPixelsX(e.x-e.width/2), blocksToPixelsY(e.y-e.height/2), e.width*blockSize, e.height*blockSize)
-     }
-    }
  
 
 }
@@ -84,16 +82,7 @@ object Renderer2D {
    * the directory structure if it can't find the resource in the classpath. The argument sEntityhould be the
    * path inside of the resources directory.
    */
-  //def loadImage(path: String): Image = {
-  //  val res = getClass.getResource(path)
-  //  if(res == null) {
-  //    new Image("file:src/main/resources"+path)
-  //  } else {
-   //   new Image(res.toExternalForm())
-   // }
-//  }  
-//}
-
+ 
 def loadImage(path:String):Image = {
   new Image("file:"+path)
 }

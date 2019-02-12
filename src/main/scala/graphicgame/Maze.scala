@@ -38,7 +38,9 @@ trait Maze extends Serializable {
   def height: Int
 
   /**
-   * Tells you if there is a wall at a particular row and column location.
+   * Tells you if there is a wall at a
+
+class Level(private var _entities:List[Entity],val maze:Maze) particular row and column location.
    * @param row The row to check.
    * @param col The column to check.
    */

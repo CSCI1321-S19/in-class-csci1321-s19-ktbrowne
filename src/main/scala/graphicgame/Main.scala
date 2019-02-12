@@ -19,42 +19,45 @@ import scalafx.scene.input.KeyCode
  * This is a stub for the graphical game.
  */
 object Main extends JFXApp {
+   val maze = RandomMaze(3, false, 20, 20, 0.6)
+   
+ var _entities = List[Entity]()
+ var level = new Level(maze, _entities)
+val p = new Player(20, 20, level)
+   
+level.+=(p)
 
-val lvl = new Level
- 
-val player = new Player(20, 20, lvl, true, false, false, false)
-  
-  stage = new JFXApp.PrimaryStage {
+stage = new JFXApp.PrimaryStage {
     title = "wtf"
-    scene = new Scene(800, 800) {
-      fill = Color.Coral
+    scene = new Scene(900, 900) {
+   
 
-      val canvas = new Canvas(800, 800)
+
+      val canvas = new Canvas(900, 900)
       val gc = canvas.graphicsContext2D
       val renderer = new Renderer2D(gc, 25)
+var lvl = level
 
-      renderer.render(player.level, 20, 20)
-
+     renderer.render(p.level, 20, 20)
       content = canvas
+println(level.entities)
+      
+println("end drawing")
 
-      //  onKeyPressed = (ke: KeyEvent) => {
-      //    ke.code match {
-      //      case KeyCode.Up => player.upPressed()
-      //    case KeyCode.Down => player.downPressed()
-      //      case KeyCode.Left => player.leftPressed()
-      //      case KeyCode.Right => player.rightPressed()
-      //  case _ =>
-      // }
-      // }
-      //  onKeyReleased = (ke: KeyEvent) => {
-      //     ke.code match {
-      //       case KeyCode.Up => player.upReleased()
-      //    case KeyCode.Down => player.downReleased()
-      //      case KeyCode.Left => player.leftReleased()
-      //   case KeyCode.Right => player.rightReleased()
-      //    case _ =>
-      //  }
+println(level.entities)
+   onKeyPressed = (ke: KeyEvent) => {
+ke.code match { 
+case KeyCode.Up => p.upPressed()
+case KeyCode.Down => p.downPressed() 
+case _ => 
+      }
+      }
+   
+
+   }   
+   
 
     }
-  }
+  
+  
 }
